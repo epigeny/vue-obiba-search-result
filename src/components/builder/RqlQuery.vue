@@ -10,11 +10,11 @@
       <template v-if="criterion.type === 'TERMS'">
 
       <div class="container">
-        <div class="form-check">
+        <div class="form-check" v-if="!criterion.isSubset">
           <input class="form-check-input" type="radio" v-bind:id="'radio-' + vocabulary.name + '-all'" name="terms-choice" value="exists" v-model="criterion.operator" v-on:change="onInput()">
           <label class="form-check-label" v-bind:for="'radio-' + vocabulary.name + '-all'">{{ "search.any" | translate }}</label>
         </div>
-        <div class="form-check">
+        <div class="form-check" v-if="!criterion.isSubset">
           <input class="form-check-input" type="radio" v-bind:id="'radio-' + vocabulary.name + '-none'" name="terms-choice" value="missing" v-model="criterion.operator" v-on:change="onInput()">
           <label class="form-check-label" v-bind:for="'radio-' + vocabulary.name + '-none'">{{ "search.none" | translate }}</label>
         </div>

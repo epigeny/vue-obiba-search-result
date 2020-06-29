@@ -103,10 +103,16 @@ export default {
       }
 
       return false;
-    },
+    },  
     selectAll(payload) {
       let criterion = new Criterion(payload);
-      criterion.query = {operator: "exists"};
+
+      if (criterion.isSubset) {
+        criterion.value = (payload.terms || []).map(term => term.name)
+      } else {
+        criterion.query = {operator: "exists"};
+      }
+
       this.updateQuery(criterion);
     },
     clear(payload) {

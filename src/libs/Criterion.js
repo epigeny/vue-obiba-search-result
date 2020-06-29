@@ -12,6 +12,13 @@ function isMatchQuery(vocabulary) {
   return !Array.isArray(vocabulary.terms) && (vocabulary.attributes || []).filter(attribute => (attribute.key === "localized" && "true" === attribute.value) || (attribute.key === "type" && attribute.value === "string")).length > 0;
 }
 
+function isSubset(vocabulary) {
+  return (vocabulary.attributes || []).reduce((acc, attribute) => {
+      acc = 'subset' === attribute.key && 'true' === attribute.value;
+      return acc;
+    }, false);
+}
+
 function findTerm(vocabulary, termName) {
   const found = (vocabulary.terms || []).filter(term => term.name === termName);
   return found.length > 0 ? found[0] : undefined;
@@ -29,6 +36,7 @@ export default class Criterion {
   type = undefined;
 
   value = undefined;
+  isSubset = false;
   _operator = undefined;
 
   static typeOfVocabulary(vocabulary) {
@@ -76,12 +84,17 @@ export default class Criterion {
 
     return output;
   }
-  
+
+  static isSubset(vocabulary) {
+    return isSubset(vocabulary);
+  }
+
   constructor(vocabulary) {
     this.vocabulary = vocabulary;
 
     if (isTermsQuery(this.vocabulary)) {
       this._operator = "in";
+      this.isSubset = isSubset(this.vocabulary); 
       this.value = [];
     } else if (isNumericQuery(this.vocabulary)) {
       this._operator = "between";
@@ -168,7 +181,7 @@ export default class Criterion {
         query.push(`${taxonomy}.${this.vocabulary.name}`);
 
         if (this.terms.length === this.value.length) {
-          query.name = ["missing", "exists"].indexOf(this.operator) > -1 ? this.operator : "exists";
+          query.name = this.isSubset || ["missing", "exists"].indexOf(this.operator) > -1 ? this.operator : "exists";
         } else {
           query.name = ["in", "out"].indexOf(this.operator) > -1 ? this.operator : "in";
         }

@@ -41,6 +41,7 @@ export default class GraphicsResultParser {
             borderWidth: 2,
           }
         },
+        aspectRatio: 3,
         // maintainAspectRatio: false,
         responsive: true,
         legend: {

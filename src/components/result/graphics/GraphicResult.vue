@@ -7,20 +7,23 @@
 </template>
 
 <script>
-// import Chart from 'chart.js';
-// import $ from 'jquery';
+import Chart from 'chart.js';
 
 export default {
   props: {
     position: Number,
-    aggId: String
+    chartDataset: Object
   },
   data: function() {
     return {
       containerId: `vosrs-charts-container-${this.position}`,
-      aggContainerId: `vosrs-charts-${this.aggId}-${this.position}`,
-      canvasId: `vosrs-charts-${this.aggId}-${this.position}-canvas`,
+      aggContainerId: `vosrs-charts-${this.chartDataset.option.agg}-${this.position}`,
+      canvasId: `vosrs-charts-${this.chartDataset.option.agg}-${this.position}-canvas`,
     }
+  },
+  mounted() {
+    const chartCanvas = document.querySelector(`#${this.canvasId}`).getContext('2d');
+    new Chart(chartCanvas, this.chartDataset.data);
   }
 }
 </script>

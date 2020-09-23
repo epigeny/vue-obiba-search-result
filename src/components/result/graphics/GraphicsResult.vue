@@ -1,7 +1,7 @@
 <template>
   <div>  
     <div v-for="(chartDataset, index) in chartDatasets" v-bind:key="index">
-      <graphic-result v-bind:chart-dataset="chartDataset" v-bind:position="index"></graphic-result>
+      <graphic-result v-bind:chart-dataset="chartDataset" v-bind:total-hits="totalHits" v-bind:position="index"></graphic-result>
     </div>
     <div id="vosr-charts-container">    
     </div>
@@ -9,7 +9,6 @@
 </template>
 
 <script>
-// import Chart from 'chart.js';
 import GraphicsResultParser from "libs/parsers/GraphicsResultParser";
 import GraphicResult from "./GraphicResult.vue";
 
@@ -23,7 +22,8 @@ export default {
   },
   data() {   
     return {      
-      chartDatasets: [],
+      totalHits: 0,
+      chartDatasets: null,
       parser: new GraphicsResultParser(this.normalizePath),
     }
   },
@@ -31,12 +31,14 @@ export default {
     onResults(payload) {
       console.debug(`**** onGraphics ${payload}`);
 
+      this.chartDatasets = []
       // TODO make sure any resultDto can be used
       const studyResult = payload.response.studyResultDto;
-      this.chartOptions.forEach((option) => {
-        const aggData = studyResult.aggs.filter((item => item.aggregation === option.agg)).pop();
-        const data = this.parser.parse(aggData, option);
-        this.chartDatasets.push({data, option});
+      this.totalHits = studyResult.totalHits;
+      this.chartOptions.forEach((options) => {
+        const aggData = studyResult.aggs.filter((item => item.aggregation === options.agg)).pop();
+        const [canvasData, tableRows] = this.parser.parse(aggData, options);
+        this.chartDatasets.push({canvasData, options, tableRows});
       });
     }
   },

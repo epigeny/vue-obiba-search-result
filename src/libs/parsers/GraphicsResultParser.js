@@ -5,30 +5,46 @@ export default class GraphicsResultParser {
     this.normalizePath = normalizePath;
   }
 
-  parse(chartData, chartDataset) {
+  __parseForChart(chartData) {
+    let labels = [];
+    let data = [];
+
+    chartData.forEach(term => {
+      labels.push(term.title);
+      data.push(term.count);
+    });
+
+    return [labels, data];
+  }
+
+  __parseForTable(chartData) {
+    return chartData.map(term => {
+      let row = {
+        title: term.title,
+        count: term.count        
+      };
+
+      return row;
+    });
+  }  
+
+  parse(chartData, chartOptions) {
     if (!chartData) {
       return;
     }
 
-    const dataKey = chartDataset.agg.match(/range$/) ? 'obiba.mica.RangeAggregationResultDto.ranges' : 'obiba.mica.TermsAggregationResultDto.terms'; 
-    let labels = [];
-    let data = [];
-
-    chartData[dataKey]
-      .forEach(term => {
-        labels.push(term.title);
-        data.push(term.count);
-      });
-
     const tr = Vue.filter('translate') || (value => value);
+    const aggData = chartData[chartOptions.dataKey];
+    const [labels, data] = this.__parseForChart(aggData);
+    const tableRows = this.__parseForTable(aggData);
 
     // console.debug(chartData['obiba.mica.TermsAggregationResultDto.terms']);
-    return {
-      type: chartDataset.type,
+    const canvasData = {
+      type: chartOptions.type,
       data: {
         labels: labels,
         datasets: [{
-          label: tr['studies'],
+          label: tr('studies'),
           data: data
         }]
       },
@@ -41,15 +57,18 @@ export default class GraphicsResultParser {
             borderWidth: 2,
           }
         },
-        aspectRatio: 3,
+        aspectRatio: 2,
         // maintainAspectRatio: false,
         responsive: true,
         legend: {
-          ...{ display: false }, ...(chartDataset.legend || {})
+          ...{ display: false }, ...(chartOptions.legend || {})
         }
         
       }
-    }
+    };
+
+    return [canvasData, tableRows];
+
   }
 
 }

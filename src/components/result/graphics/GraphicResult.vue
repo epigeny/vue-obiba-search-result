@@ -3,7 +3,7 @@
   <div class="card-header">
     <h3 class="card-title">{{chartDataset.options.title | translate}}</h3>
     <div class="card-tools float-right">
-      <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Graphics">"
+      <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Graphics">
         <i class="fas fa-minus"></i>
       </button>
       </div>

@@ -3,12 +3,13 @@
   <div class="card-header">
     <h3 class="card-title">{{chartDataset.options.title | translate}}</h3>
     <div class="card-tools float-right">
-      <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" title="Graphics">
+      <button type="button" class="btn btn-tool" data-card-widget="collapse" data-toggle="tooltip" v-bind:title="'collapse' | translate">
         <i class="fas fa-minus"></i>
       </button>
       </div>
     </div>
     <div class="card-body">
+      <p class="text-muted">{{chartDataset.options.text | translate}}</p>
       <div v-bind:id="containerId" class="row">
         <div v-bind:id="chartContainerId" class="col-6">
           <!-- canvas element -->
@@ -17,8 +18,8 @@
           <table id="vosr-datasets-result" class="table table-striped" width="100%">
             <thead>
               <tr>
-                <th>{{ "acronym" | translate }}</th>
-                <th>{{ "name" | translate }}</th>
+                <th>{{ "value" | translate }}</th>
+                <th>{{ "frequency" | translate }}</th>
               </tr>          
             </thead>
             <tbody>

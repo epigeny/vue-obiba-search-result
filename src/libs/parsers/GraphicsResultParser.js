@@ -45,7 +45,8 @@ export default class GraphicsResultParser {
         labels: labels,
         datasets: [{
           label: tr('studies'),
-          data: data
+          data: data,
+          backgroundColor: chartOptions.backgroundColor
         }]
       },
       options: {

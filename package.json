@@ -25,7 +25,7 @@
     "rql": "git+https://github.com/epigeny/rql.git#1.1.0",
     "vue": "^2.6.12",
     "vue-template-compiler": "^2.6.12",
-    "marked": "^1.1.1"
+    "marked": "^4.0.10"
   },
   "eslintConfig": {
     "extends": [
